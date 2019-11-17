@@ -32,7 +32,7 @@ bool lcnt_vec_grow(lcnt_vec* vec, size_t cap) {
 	return true;
 }
 
-void* lcnt_vec_remove_end(lcnt_vec* vec) {
+void* lcnt_vec_pop(lcnt_vec* vec) {
 	if (vec->len == 0)
 		return NULL;
 	void* elem = lcnt_vec_get(vec, vec->len - 1);
@@ -47,7 +47,7 @@ void lcnt_vec_free(lcnt_vec* vec) {
 	vec->len = 0;
 }
 
-void* lcnt_vec_get(lcnt_vec* vec, size_t index) {
+void* lcnt_vec_set(lcnt_vec* vec, size_t index) {
 	if (index >= vec->cap) {
 		return NULL;
 	}
@@ -57,7 +57,7 @@ void* lcnt_vec_get(lcnt_vec* vec, size_t index) {
 	return ((char*)vec->data) + (vec->esize * index);
 }
 
-const void* lcnt_vec_get_const(const lcnt_vec* vec, size_t index) {
+const void* lcnt_vec_get(const lcnt_vec* vec, size_t index) {
 	if (index >= vec->len) {
 		return NULL;
 	}

@@ -15,21 +15,25 @@ typedef struct {
 void lcnt_vec_init(lcnt_vec* vec, size_t esize);
 void lcnt_vec_free(lcnt_vec* vec);
 
-// Appends an element to the vector.
+/** Appends an element to the vector. */
 bool lcnt_vec_add(lcnt_vec* vec, void* data);
 
-// Removes an element from the end of the vector and returns it.
-void* lcnt_vec_remove_end(lcnt_vec* vec);
+/** Removes an element from the end of the vector and returns it. */
+void* lcnt_vec_pop(lcnt_vec* vec);
 
-// Returns pointer to `index`, or `NULL` if `index` >= `cap`. Increases length to match `index` if needed.
-void* lcnt_vec_get(lcnt_vec* vec, size_t index);
+/** Returns pointer to `index`, or `NULL` if `index` >= `cap`. Increases length to match `index` if needed. */
+void* lcnt_vec_set(lcnt_vec* vec, size_t index);
 
-// Grows `vec` to capacity `cap` if needed. Returns `true` if `vec->cap >= cap`, false otherwise.
+/** Grows `vec` to capacity `cap` if needed. Returns `true` if `vec->cap >= cap`, false otherwise. */
 bool lcnt_vec_grow(lcnt_vec* vec, size_t cap);
 
-const void* lcnt_vec_get_const(const lcnt_vec* vec, size_t index);
+const void* lcnt_vec_get(const lcnt_vec* vec, size_t index);
 
-#define lcnt_vec_add_const(vec, val, T) lcnt_vec_add(vec, (T[]){(val)})
-#define lcnt_vec_set(vec, index, val, T) *(T*)lcnt_vec_get(vec, index) = val
+/** Adds `(T)val`. `val` must be a constant expression. */
+#define lcnt_vec_add_value(vec, val, T) lcnt_vec_add((vec), (T[]){(T)(val)})
+/** Sets `vec[index]` to `(T)val`. If `index` is out-of-bounds, produces a segfault. */
+#define lcnt_vec_set_value(vec, index, val, T) *(T*)lcnt_vec_set((vec), (index)) = (T)(val)
+/** Gets & returns `(T)vec[index]`. If `index` is out-of-bounds, produces a segfault. */
+#define lcnt_vec_get_value(vec, index, T) (*(const T*)lcnt_vec_get((vec), (index)))
 
 #endif
