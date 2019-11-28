@@ -2,6 +2,7 @@
 #define _LCNT_LIST_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 typedef struct lcnt_list_node {
     struct lcnt_list_node* next;
@@ -14,7 +15,7 @@ typedef struct {
     lcnt_list_node* end;
 } lcnt_list;
 
-void lcnt_list_init(lcnt_list* list, size_t esize);
+bool lcnt_list_init(lcnt_list* list, size_t esize);
 void lcnt_list_free(lcnt_list* list);
 
 lcnt_list_node* lcnt_list_append(lcnt_list* list, void* data);

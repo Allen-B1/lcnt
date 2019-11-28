@@ -3,11 +3,13 @@
 #include <stdio.h>
 #include <lcnt_vec.h>
 
-void lcnt_vec_init(lcnt_vec* vec, size_t esize) {
+bool lcnt_vec_init(lcnt_vec* vec, size_t esize) {
 	vec->esize = esize;
 	vec->len = 0;
 	vec->cap = 0;
 	vec->data = NULL;
+
+	return true;
 }
 
 void lcnt_vec_free(lcnt_vec* vec) {

@@ -1,7 +1,8 @@
-#include <lcnt_list.h>
-#include <lcnt_vec.h>
+#include <lcnt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <inttypes.h>
 #include <time.h>
 
 #define intoptr(val, T) (T[]){(val)}
@@ -54,6 +55,26 @@ void test_vec() {
 	lcnt_vec_free(&nums);
 }
 
+void test_map() {
+	lcnt_map grades;
+	lcnt_map_init(&grades, &lcnt_ktype_string, sizeof(uint8_t), 16);
+	*(uint8_t*)lcnt_map_set(&grades, &"Alice") = rand() % 100;
+	*(uint8_t*)lcnt_map_set(&grades, &"Bob") = rand() % 100;
+	*(uint8_t*)lcnt_map_set(&grades, &"Charlie") = rand() % 100;
+	*(uint8_t*)lcnt_map_set(&grades, &"David") = rand() % 100;
+
+	lcnt_map_remove(&grades, &"David");
+
+	size_t len;
+	const char** keys = lcnt_map_keys(&grades, &len);
+	for (size_t i = 0; i < len; i++) {
+		printf("%s has a %" PRIu8 "%%\n", keys[i], *(const uint8_t*)lcnt_map_get(&grades, keys[i]));
+	}
+	free(keys);
+
+	lcnt_map_free(&grades);
+}
+
 int main() {
 	srand(time(NULL));
 
@@ -62,6 +83,9 @@ int main() {
 
 	puts("== TESTING VEC ==");
 	test_vec();
+
+	puts("== TESTING MAP ==");
+	test_map();
 
 	return 0;
 }

@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-void lcnt_list_init(lcnt_list* list, size_t esize) {
+bool lcnt_list_init(lcnt_list* list, size_t esize) {
     list->esize = esize;
     list->start = NULL;
     list->end = NULL;
+	return true;
 }
 
 void lcnt_list_free(lcnt_list* list) {

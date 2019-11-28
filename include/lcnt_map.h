@@ -3,27 +3,25 @@
 
 #include <stddef.h>
 #include <stdbool.h>
-#include "lcnt_list.h"
-
-typedef size_t (*lcnt_map_hash_func)(void* key);
-typedef bool (*lcnt_map_eq_func)(void* key1, void* key2);
+#include "lcnt_ktype.h"
 
 typedef struct {
-    lcnt_list* _buckets;
+    /*const*/ size_t cap;
+    /*const*/ size_t vsize;
+    /*const*/ lcnt_ktype* ktype;
 
-    /* const */
-    size_t cap;
-    size_t esize;
-
-    lcnt_map_hash_func hash_func;
-    lcnt_map_eq_func eq_func;
+    void* _buckets;
 } lcnt_map;
 
-bool lcnt_map_init(lcnt_map* map, size_t esize, size_t cap, lcnt_map_hash_func hash_func, lcnt_map_eq_func eq_func);
+/** Initializes a map. `ktype` must not be `NULL`. */
+bool lcnt_map_init(lcnt_map* map, lcnt_ktype* ktype, size_t vsize, size_t cap);
 void lcnt_map_free(lcnt_map* map);
-bool lcnt_map_remove(lcnt_map* map, void* key);
 
-void* lcnt_map_set(lcnt_map* map, void* key);
-const void* lcnt_map_get(const lcnt_map* map, void* key);
+void* lcnt_map_set(lcnt_map* map, const void* key);
+const void* lcnt_map_get(const lcnt_map* map, const void* key);
+bool lcnt_map_remove(lcnt_map* map, const void* key);
+
+/** Returns an array of the map's keys. The array must be `free`d. */
+const void** lcnt_map_keys(const lcnt_map* map, size_t* size);
 
 #endif

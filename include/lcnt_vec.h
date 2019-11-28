@@ -12,7 +12,7 @@ typedef struct {
 	void *data;
 } lcnt_vec;
 
-void lcnt_vec_init(lcnt_vec* vec, size_t esize);
+bool lcnt_vec_init(lcnt_vec* vec, size_t esize);
 void lcnt_vec_free(lcnt_vec* vec);
 
 /** Adds an element to the end of the vector. */
