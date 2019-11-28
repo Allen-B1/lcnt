@@ -16,10 +16,10 @@ void lcnt_vec_init(lcnt_vec* vec, size_t esize);
 void lcnt_vec_free(lcnt_vec* vec);
 
 /** Adds an element to the end of the vector. */
-intmax_t lcnt_vec_append(lcnt_vec* vec, void* data);
+void* lcnt_vec_append(lcnt_vec* vec);
 
 /** Inserts an element at the given index. **/
-bool lcnt_vec_insert(lcnt_vec* vec, size_t index, void* data);
+void* lcnt_vec_insert(lcnt_vec* vec, size_t index);
 
 /** Removes the element at the given index. */
 bool lcnt_vec_remove(lcnt_vec* vec, size_t index);

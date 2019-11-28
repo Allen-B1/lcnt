@@ -36,14 +36,13 @@ void test_list() {
 void test_vec() {
 	lcnt_vec nums;
 	lcnt_vec_init(&nums, sizeof(double));
-	lcnt_vec_append(&nums, intoptr(2.71, double));
-	lcnt_vec_append(&nums, intoptr((double)rand() / RAND_MAX, double));
-	intmax_t pi = lcnt_vec_append(&nums, intoptr(3.14, double));
-	printf("pi = %.2f \n", *(const double*)lcnt_vec_get(&nums, pi));
+	*(double*)lcnt_vec_append(&nums) = 2.71;
+	*(double*)lcnt_vec_append(&nums) = 8.0;
+	*(double*)lcnt_vec_append(&nums) = 3.14;
 
 	lcnt_vec_remove(&nums, 1);
-	lcnt_vec_append(&nums, intoptr(5.1, double));
-	lcnt_vec_insert(&nums, pi, intoptr(7.14, double));
+	*(double*)lcnt_vec_append(&nums) = 5.0;
+	*(double*)lcnt_vec_insert(&nums, 1) = 7.0;
 
 	size_t index;
 	printf("nums = ");

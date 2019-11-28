@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <lcnt_vec.h>
 
 void lcnt_vec_init(lcnt_vec* vec, size_t esize) {
@@ -16,14 +17,13 @@ void lcnt_vec_free(lcnt_vec* vec) {
 	vec->len = 0;
 }
 
-intmax_t lcnt_vec_append(lcnt_vec* vec, void* data) {
+void* lcnt_vec_append(lcnt_vec* vec) {
 	if(vec->len >= vec->cap) {
 		if (!lcnt_vec_grow(vec, vec->cap >= 16 ? vec->cap + 16 : (
-					vec->cap == 0 ? 2 : vec->cap * 2))) return -1;
+					vec->cap == 0 ? 2 : vec->cap * 2))) return NULL;
 	}
-	memcpy(((char*)vec->data) + (vec->esize * vec->len), data, vec->esize);
 	vec->len += 1;
-	return vec->len - 1;
+	return ((char*)vec->data) + vec->esize * (vec->len - 1);
 }
 
 bool lcnt_vec_grow(lcnt_vec* vec, size_t cap) {
@@ -64,22 +64,21 @@ const void* lcnt_vec_get(const lcnt_vec* vec, size_t index) {
 	return ((const char*)vec->data) + (vec->esize * index);
 }
 
-bool lcnt_vec_insert(lcnt_vec* vec, size_t index, void* data) {
+void* lcnt_vec_insert(lcnt_vec* vec, size_t index) {
 	if (index > vec->len) {
-		return false;
+		return NULL;
 	}
 
 	if(vec->len >= vec->cap) {
 		if (!lcnt_vec_grow(vec, vec->cap >= 16 ? vec->cap + 16 : (
-					vec->cap == 0 ? 2 : vec->cap * 2))) return false;
+					vec->cap == 0 ? 2 : vec->cap * 2))) return NULL;
 	}
 
 	if (index != vec->len) {
 		memcpy(((char*)vec->data) + (vec->esize * (index + 1)), ((char*)vec->data) + (vec->esize * index), vec->esize * (vec->len - index));
 	}
-	memcpy(((char*)vec->data) + (vec->esize * index), data, vec->esize);
 	vec->len += 1;
-	return true;
+	return ((char*)vec->data) + (vec->esize * index);
 }
 
 bool lcnt_vec_remove(lcnt_vec* vec, size_t index) {
