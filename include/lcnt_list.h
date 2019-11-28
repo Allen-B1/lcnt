@@ -16,8 +16,15 @@ typedef struct {
 
 void lcnt_list_init(lcnt_list* list, size_t esize);
 void lcnt_list_free(lcnt_list* list);
-lcnt_list_node* lcnt_list_add(lcnt_list* list, void* data);
+
+lcnt_list_node* lcnt_list_append(lcnt_list* list, void* data);
 lcnt_list_node* lcnt_list_prepend(lcnt_list* list, void* data);
+lcnt_list_node* lcnt_list_insert(lcnt_list* list, lcnt_list_node* prev, void* data);
+lcnt_list_node* lcnt_list_remove_after(lcnt_list* list, lcnt_list_node* prev);
+lcnt_list_node* lcnt_list_remove_start(lcnt_list* list);
+
+void* lcnt_list_set(lcnt_list* list, lcnt_list_node* node);
+const void* lcnt_list_get(const lcnt_list* list, const lcnt_list_node* node);
 
 #define lcnt_list_foreach(list, node) for (*(node) = (list)->start; *(node) != NULL; *(node) = (*(node))->next)
 

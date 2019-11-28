@@ -9,14 +9,21 @@ void lcnt_vec_init(lcnt_vec* vec, size_t esize) {
 	vec->data = NULL;
 }
 
-bool lcnt_vec_add(lcnt_vec* vec, void* data) {
+void lcnt_vec_free(lcnt_vec* vec) {
+	free(vec->data);
+	vec->data = NULL;
+	vec->cap = 0;
+	vec->len = 0;
+}
+
+intmax_t lcnt_vec_append(lcnt_vec* vec, void* data) {
 	if(vec->len >= vec->cap) {
 		if (!lcnt_vec_grow(vec, vec->cap >= 16 ? vec->cap + 16 : (
-					vec->cap == 0 ? 2 : vec->cap * 2))) return false;
+					vec->cap == 0 ? 2 : vec->cap * 2))) return -1;
 	}
 	memcpy(((char*)vec->data) + (vec->esize * vec->len), data, vec->esize);
 	vec->len += 1;
-	return true;
+	return vec->len - 1;
 }
 
 bool lcnt_vec_grow(lcnt_vec* vec, size_t cap) {
@@ -32,19 +39,12 @@ bool lcnt_vec_grow(lcnt_vec* vec, size_t cap) {
 	return true;
 }
 
-void* lcnt_vec_pop(lcnt_vec* vec) {
+bool lcnt_vec_remove_end(lcnt_vec* vec) {
 	if (vec->len == 0)
-		return NULL;
-	void* elem = lcnt_vec_get(vec, vec->len - 1);
+		return false;
+	void* elem = (void*)lcnt_vec_get(vec, vec->len - 1);
 	vec->len -= 1;
-	return elem;
-}
-
-void lcnt_vec_free(lcnt_vec* vec) {
-	free(vec->data);
-	vec->data = NULL;
-	vec->cap = 0;
-	vec->len = 0;
+	return true;
 }
 
 void* lcnt_vec_set(lcnt_vec* vec, size_t index) {
@@ -63,3 +63,32 @@ const void* lcnt_vec_get(const lcnt_vec* vec, size_t index) {
 	}
 	return ((const char*)vec->data) + (vec->esize * index);
 }
+
+bool lcnt_vec_insert(lcnt_vec* vec, size_t index, void* data) {
+	if (index > vec->len) {
+		return false;
+	}
+
+	if(vec->len >= vec->cap) {
+		if (!lcnt_vec_grow(vec, vec->cap >= 16 ? vec->cap + 16 : (
+					vec->cap == 0 ? 2 : vec->cap * 2))) return false;
+	}
+
+	if (index != vec->len) {
+		memcpy(((char*)vec->data) + (vec->esize * (index + 1)), ((char*)vec->data) + (vec->esize * index), vec->esize * (vec->len - index));
+	}
+	memcpy(((char*)vec->data) + (vec->esize * index), data, vec->esize);
+	vec->len += 1;
+	return true;
+}
+
+bool lcnt_vec_remove(lcnt_vec* vec, size_t index) {
+	if (index >= vec->len) {
+		return false;
+	}
+
+	memcpy(((char*)vec->data) + (vec->esize * index), ((char*)vec->data) + (vec->esize * (index + 1)), vec->esize * (vec->len - index - 1));
+	vec->len -= 1;
+	return true;
+}
+
